@@ -1,5 +1,6 @@
-use crate::{pkg::server, prelude::Result};
+use crate::{conf::settings, pkg::server, prelude::Result};
 use clap::{Parser, Subcommand};
+use sqlx::{Executor, PgPool};
 
 #[derive(Parser)]
 #[command(about="lets you run auth-svc commands")]
@@ -21,7 +22,9 @@ pub async fn run() -> Result<()>{
             server::listen().await?; 
         },
         Some(SubCommandType::Migrate) => {
-            //run diesel/sqlx migrations
+            let pool = PgPool::connect(&settings.database_url).await?;
+            pool.execute(include_str!("../migrations/init.sql")).await?;
+            tracing::info!("init migrations applied successfully")
         },
         None => {
             tracing::error!("no subcommand passed")

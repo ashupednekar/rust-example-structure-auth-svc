@@ -7,7 +7,8 @@ pub struct Settings {
     pub listen_port: String,
     pub otlp_host: Option<String>,
     pub otlp_port: Option<String>,
-    pub use_telemetry: bool
+    pub use_telemetry: bool,
+    pub database_url: String
 }
 
 impl Settings {
