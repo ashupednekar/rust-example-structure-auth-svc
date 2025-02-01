@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use serde::Deserialize;
 use sqlx::prelude::FromRow;
 
@@ -11,3 +12,13 @@ pub struct User{
     pub secret_answer: String,
     pub display_pic: String
 }
+
+
+#[derive(Debug, Deserialize, FromRow)]
+pub struct Session {
+    pub username: String,
+    pub token: String,
+    pub create_dt: NaiveDateTime,  
+}
+
+

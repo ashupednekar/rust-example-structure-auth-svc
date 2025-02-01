@@ -11,7 +11,7 @@ pub async fn listen() -> Result<()>{
         &format!("0.0.0.0:{}", &settings.listen_port)
     ).await.unwrap();
        tracing::info!("listening at: {}", &settings.listen_port);
-    axum::serve(listener, build_routes())
+    axum::serve(listener, build_routes().await?)
         .await?;
     Ok(())
 }
