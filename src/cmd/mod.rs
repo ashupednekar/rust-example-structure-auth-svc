@@ -1,4 +1,4 @@
-use crate::{prelude::Result, conf::settings};
+use crate::{pkg::server, prelude::Result};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -18,7 +18,7 @@ pub async fn run() -> Result<()>{
     let args = Cmd::parse();
     match args.command{
         Some(SubCommandType::Listen) => {
-            //start server
+            server::listen().await?; 
         },
         Some(SubCommandType::Migrate) => {
             //run diesel/sqlx migrations
