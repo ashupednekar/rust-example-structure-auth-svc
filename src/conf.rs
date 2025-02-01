@@ -5,10 +5,17 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 pub struct Settings {
     pub listen_port: String,
+    pub database_url: String,
+    //otel
     pub otlp_host: Option<String>,
     pub otlp_port: Option<String>,
     pub use_telemetry: bool,
-    pub database_url: String
+    //email
+    pub from_email: String,
+    pub smtp_user: String,
+    pub smtp_pass: String,
+    pub smtp_server: String,
+    pub smtp_port: u16,
 }
 
 impl Settings {
