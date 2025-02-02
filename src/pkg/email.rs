@@ -48,5 +48,3 @@ mod tests {
 
 
 
-    tracing::info!("email body: {}", &body);
-    return Ok(());

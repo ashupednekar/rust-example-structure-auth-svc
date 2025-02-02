@@ -2,9 +2,8 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    secret_question TEXT NOT NULL,
-    secret_answer TEXT NOT NULL,
-    display_pic TEXT NOT NULL
+    display_pic TEXT NOT NULL,
+    verified BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);

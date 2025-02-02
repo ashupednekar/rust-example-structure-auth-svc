@@ -1,3 +1,5 @@
 errors:
   - code: ERR-SMTP
     detail_en_US: "error sending email: [err]"
+  - code: ERR-AUTH-001
+    detail_en_US: "password and confirm password should match"
