@@ -3,11 +3,7 @@ use standard_error::{Interpolate, StandardError};
 
 use crate::conf::settings;
 
-pub async fn send_email(
-    to: &str,
-    subject: &str,
-    body: &str,
-) -> Result<(), StandardError> {
+pub async fn send_email(to: &str, subject: &str, body: &str) -> Result<(), StandardError> {
     tracing::info!("email body: {}", &body);
     return Ok(());
     let message = MessageBuilder::new()
@@ -17,18 +13,22 @@ pub async fn send_email(
         //.html_body("<h1>Hello, world!</h1>")
         .text_body(body.to_string());
 
-    tracing::debug!("{:?}", (settings.from_email.clone(), settings.smtp_pass.clone()));
+    tracing::debug!(
+        "{:?}",
+        (settings.from_email.clone(), settings.smtp_pass.clone())
+    );
 
     SmtpClientBuilder::new(settings.smtp_server.clone(), settings.smtp_port)
         .implicit_tls(false)
         .credentials((settings.from_email.clone(), settings.smtp_pass.clone()))
         .connect()
-        .await.unwrap()//map_err(|e| StandardError::new("ER-SMTP").interpolate_err(e.to_string()))?
+        .await
+        .unwrap() //map_err(|e| StandardError::new("ER-SMTP").interpolate_err(e.to_string()))?
         .send(message)
-        .await.map_err(|e| StandardError::new("ER-SMTP").interpolate_err(e.to_string()))?;
+        .await
+        .map_err(|e| StandardError::new("ER-SMTP").interpolate_err(e.to_string()))?;
     Ok(())
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -45,6 +45,3 @@ mod tests {
         Ok(())
     }
 }
-
-
-

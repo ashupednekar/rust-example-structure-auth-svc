@@ -1,9 +1,10 @@
 use axum::{
-    extract::{Request, State}, middleware::Next, response::Response
+    extract::{Request, State},
+    middleware::Next,
+    response::Response,
 };
 
 use crate::state::AppState;
-
 
 pub async fn auth_middleware(
     State(state): State<AppState>,
