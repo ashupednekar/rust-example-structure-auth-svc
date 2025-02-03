@@ -1,4 +1,4 @@
-use axum::{extract::State, http::StatusCode, Json};
+use axum::{extract::{Query, State}, http::StatusCode, Json};
 use serde::Deserialize;
 use serde_json::json;
 use standard_error::{StandardError, Status};
@@ -17,21 +17,28 @@ pub struct RegistrationInput {
     pub confirm_password: String,
 }
 
-pub async fn initiate_registration(
-    Json(payload): Json<RegistrationInput>,
+pub async fn initiate_user_registration(
     State(state): State<AppState>,
+    Json(payload): Json<RegistrationInput>,
 ) -> Result<String> {
     if payload.password != payload.confirm_password {
-        return Err(StandardError::new("ERR-AUTH-001").code(StatusCode::BAD_REQUEST));
+        return Err(StandardError::new("ERR-REG-000").code(StatusCode::BAD_REQUEST));
     }
-    let user = User {
-        username: payload.username,
-        email: payload.email,
-        password: payload.password,
-        display_pic: None,
-        verified: false,
-    };
+    let user = User::new(payload);
     user.save(&state.db_pool).await?;
-    user.initiate_registration().await?;
-    Ok(serde_json::to_string(&json!({ "msg": "success" }))?)
+    user.initiate_registration(state).await?;
+    Ok(serde_json::to_string(&json!({ "msg": "registration initiated successfully" }))?)
+}
+
+#[derive(Deserialize)]
+pub struct RegVerifyInput{
+    pub code: String
+}
+
+pub async fn verify_user_registration(
+    State(state): State<AppState>,
+    Query(params): Query<RegVerifyInput>
+) -> Result<String>{
+    User::verify_registration(state, &params.code).await?;
+    Ok(serde_json::to_string(&json!({ "msg": "user verified successfully" }))?)
 }

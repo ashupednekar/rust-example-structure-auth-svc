@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    display_pic TEXT NOT NULL,
+    display_pic TEXT,
     verified BOOLEAN DEFAULT FALSE NOT NULL
 );
 

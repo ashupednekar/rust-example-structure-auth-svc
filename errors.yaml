@@ -1,5 +1,11 @@
 errors:
   - code: ERR-SMTP
     detail_en_US: "error sending email: [err]"
-  - code: ERR-AUTH-001
+  - code: ERR-REG-000
     detail_en_US: "password and confirm password should match"
+  - code: ERR-REG-001
+    detail_en_US: "error generating validation code"
+  - code: ERR-REG-002
+    detail_en_US: "this code has expired"
+  - code: ERR-REG-003
+    detail_en_US: "this code is invalid"

@@ -6,6 +6,7 @@ use serde::Deserialize;
 pub struct Settings {
     pub listen_port: String,
     pub database_url: String,
+    pub redis_url: String,
     //otel
     pub otlp_host: Option<String>,
     pub otlp_port: Option<String>,
@@ -16,6 +17,8 @@ pub struct Settings {
     pub smtp_pass: String,
     pub smtp_server: String,
     pub smtp_port: u16,
+    //timeouts
+    pub registration_timeout: String 
 }
 
 impl Settings {

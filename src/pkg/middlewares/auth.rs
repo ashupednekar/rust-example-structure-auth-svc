@@ -11,7 +11,6 @@ pub async fn auth_middleware(
     request: Request,
     next: Next,
 ) -> Response {
-    tracing::debug!("state: {:?}", &state);
     tracing::debug!("req: {:?}", &request);
     next.run(request).await
 }

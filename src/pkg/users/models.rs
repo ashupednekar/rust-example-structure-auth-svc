@@ -1,4 +1,4 @@
-use crate::prelude::Result;
+use crate::{pkg::server::handlers::user_mgmt::RegistrationInput, prelude::Result};
 use chrono::NaiveDateTime;
 use serde::Deserialize;
 use sqlx::{prelude::FromRow, PgPool};
@@ -13,6 +13,17 @@ pub struct User {
 }
 
 impl User {
+
+    pub fn new(payload: RegistrationInput) -> Self{
+        Self {
+            username: payload.username,
+            email: payload.email,
+            password: payload.password,
+            display_pic: None,
+            verified: false,
+        }
+    }
+
     pub async fn save(&self, pool: &PgPool) -> Result<()> {
         sqlx::query!(
             r#"
@@ -29,6 +40,52 @@ impl User {
         .await?;
         Ok(())
     }
+
+    pub async fn mark_as_verified(&self, pool: &PgPool) -> Result<()> {
+        sqlx::query!(
+            r#"
+            UPDATE users 
+            SET verified = true 
+            WHERE username = $1
+            "#,
+            self.username
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn update_display_pic(&self, pool: &PgPool, new_dp: &str) -> Result<()> {
+        sqlx::query!(
+            r#"
+            UPDATE users 
+            SET display_pic = $1 
+            WHERE username = $2
+            "#,
+            new_dp,
+            self.username
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn find_by_username(pool: &PgPool, username: &str) -> Result<Option<User>> {
+        let user = sqlx::query_as!(
+            User,
+            r#"
+            SELECT username, email, password, display_pic, verified 
+            FROM users 
+            WHERE username = $1
+            "#,
+            username
+        )
+        .fetch_optional(pool)
+        .await?;
+
+        Ok(user)
+    }
+
 }
 
 #[derive(Debug, Deserialize, FromRow)]
